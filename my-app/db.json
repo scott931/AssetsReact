@@ -1,0 +1,309 @@
+{
+  "overview": {
+    "overallAssets": 256,
+    "overallQuantities": 5370,
+    "availableAssets": 213,
+    "repairAssets": 745,
+    "usersLoggedIn": 35,
+    "overallValue": 950000,
+    "repairedAssets": 190,
+    "assetsUnderMaintenance": 45,
+    "highPriorityAssets": 80,
+    "lowStockAssets": 55
+  },
+  "recentActivity": [
+    {
+      "id": "1",
+      "company": "i-Tech",
+      "product": "Laptop",
+      "quantity": 20,
+      "brand": "Dell",
+      "rate": 1200,
+      "total": 24000
+    },
+    {
+      "id": "2",
+      "company": "TechCorp",
+      "product": "Mouse",
+      "quantity": 50,
+      "brand": "Logitech",
+      "rate": 25,
+      "total": 1250
+    },
+    {
+      "id": "3",
+      "company": "GlobalTech",
+      "product": "Keyboard",
+      "quantity": 30,
+      "brand": "HP",
+      "rate": 40,
+      "total": 1200
+    },
+    {
+      "id": "4",
+      "company": "SoftSolutions",
+      "product": "Monitor",
+      "quantity": 15,
+      "brand": "Samsung",
+      "rate": 200,
+      "total": 3000
+    },
+    {
+      "id": "5",
+      "company": "NextGen",
+      "product": "Printer",
+      "quantity": 10,
+      "brand": "Canon",
+      "rate": 150,
+      "total": 1500
+    },
+    {
+      "id": "6",
+      "company": "CompuCare",
+      "product": "Tablet",
+      "quantity": 25,
+      "brand": "Apple",
+      "rate": 600,
+      "total": 15000
+    },
+    {
+      "id": "7",
+      "company": "SmartTech",
+      "product": "Smartwatch",
+      "quantity": 40,
+      "brand": "Garmin",
+      "rate": 200,
+      "total": 8000
+    },
+    {
+      "id": "8",
+      "company": "OfficeGear",
+      "product": "Desk Lamp",
+      "quantity": 70,
+      "brand": "Philips",
+      "rate": 30,
+      "total": 2100
+    }
+  ],
+  "assets": [
+    {
+      "id": "1",
+      "assetType": "Electronics",
+      "assetName": "Smartphone",
+      "assetModelId": "GalaxyS23",
+      "repairThreshold": 3,
+      "dealer": "MobileHub",
+      "quantity": 25,
+      "issueDate": "2024-01-10",
+      "warrantyDate": "2026-01-10",
+      "costPerUnit": 850
+    },
+    {
+      "id": "4",
+      "assetType": "Electronics",
+      "assetName": "Projector",
+      "assetModelId": "ProjUltraHD",
+      "repairThreshold": 4,
+      "dealer": "VisualTech",
+      "quantity": 10,
+      "issueDate": "2024-03-20",
+      "warrantyDate": "2025-03-20",
+      "costPerUnit": 600
+    },
+    {
+      "id": "5",
+      "assetType": "Appliance",
+      "assetName": "Washing Machine",
+      "assetModelId": "WashPro3000",
+      "repairThreshold": 2,
+      "dealer": "HomeAppliances",
+      "quantity": 7,
+      "issueDate": "2024-02-18",
+      "warrantyDate": "2026-02-18",
+      "costPerUnit": 900
+    },
+    {
+      "id": "6",
+      "assetType": "Electronics",
+      "assetName": "Drone",
+      "assetModelId": "AeroX1000",
+      "repairThreshold": 2,
+      "dealer": "SkyTech",
+      "quantity": 5,
+      "issueDate": "2024-08-10",
+      "warrantyDate": "2026-08-10",
+      "costPerUnit": 1500
+    },
+    {
+      "id": "7",
+      "assetType": "Appliance",
+      "assetName": "Dishwasher",
+      "assetModelId": "DishPro2024",
+      "repairThreshold": 3,
+      "dealer": "KitchenMax",
+      "quantity": 10,
+      "issueDate": "2024-09-01",
+      "warrantyDate": "2026-09-01",
+      "costPerUnit": 700
+    }
+  ],
+  "addedAssets": [
+    {
+      "id": "1",
+      "assetType": "Electronics",
+      "assetName": "Smartphone",
+      "assetModelId": "PhoneX",
+      "repairThreshold": 5,
+      "dealer": "MobileWorld",
+      "quantity": 50,
+      "issueDate": "2024-11-22",
+      "warrantyDate": "2026-11-22",
+      "costPerUnit": 800
+    },
+    {
+      "id": "2",
+      "assetType": "Appliance",
+      "assetName": "Microwave",
+      "assetModelId": "MicroHeat2000",
+      "repairThreshold": 2,
+      "dealer": "KitchenPro",
+      "quantity": 20,
+      "issueDate": "2024-10-15",
+      "warrantyDate": "2026-10-15",
+      "costPerUnit": 250
+    },
+    {
+      "id": "3",
+      "assetType": "Furniture",
+      "assetName": "Conference Table",
+      "assetModelId": "Table500",
+      "repairThreshold": 3,
+      "dealer": "OfficePlus",
+      "quantity": 10,
+      "issueDate": "2024-09-01",
+      "warrantyDate": "2026-09-01",
+      "costPerUnit": 700
+    },
+    {
+      "id": "4",
+      "assetType": "Electronics",
+      "assetName": "Speaker",
+      "assetModelId": "SoundMax",
+      "repairThreshold": 4,
+      "dealer": "AudioWorks",
+      "quantity": 15,
+      "issueDate": "2024-08-20",
+      "warrantyDate": "2026-08-20",
+      "costPerUnit": 300
+    },
+    {
+      "id": "5",
+      "assetType": "Appliance",
+      "assetName": "Air Conditioner",
+      "assetModelId": "CoolerX",
+      "repairThreshold": 2,
+      "dealer": "ClimateControl",
+      "quantity": 8,
+      "issueDate": "2024-07-25",
+      "warrantyDate": "2026-07-25",
+      "costPerUnit": 1200
+    },
+    {
+      "id": "6",
+      "assetType": "Electronics",
+      "assetName": "Camera",
+      "assetModelId": "ProCam500",
+      "repairThreshold": 3,
+      "dealer": "LensWorks",
+      "quantity": 10,
+      "issueDate": "2024-06-15",
+      "warrantyDate": "2026-06-15",
+      "costPerUnit": 2000
+    },
+    {
+      "id": "2da5",
+      "assetType": "ravi reddy",
+      "assetName": "harika reddy",
+      "assetModelId": "8",
+      "repairThreshold": "5",
+      "dealer": "rishi reddy",
+      "quantity": "6",
+      "issueDate": "2024-11-26",
+      "warrantyDate": "2024-11-29",
+      "costPerUnit": "66"
+    }
+  ],
+  "warehouse": [
+    {
+      "id": "1",
+      "assetType": "Laptop",
+      "assetName": "Dell Inspiron",
+      "modelId": "DELL123",
+      "dealer": "Tech World",
+      "warrantyDate": "2025-12-01"
+    },
+    {
+      "id": "2",
+      "assetType": "Monitor",
+      "assetName": "HP EliteDisplay",
+      "modelId": "HP456",
+      "dealer": "Display Pro",
+      "warrantyDate": "2024-06-15"
+    },
+    {
+      "id": "3",
+      "assetType": "Router",
+      "assetName": "NetGear Router",
+      "modelId": "NG789",
+      "dealer": "ConnectTech",
+      "warrantyDate": "2025-11-20"
+    }
+  ],
+  "upcomingAssets": [
+    {
+      "id": "7ac5",
+      "assetType": "Miscellaneous",
+      "assetName": "Toolbox",
+      "assetModelId": "TB2024",
+      "repairThreshold": 2,
+      "dealer": "HandyTools",
+      "quantity": 15,
+      "issueDate": "2024-11-23",
+      "warrantyDate": "2026-11-23",
+      "costPerUnit": 150
+    },
+    {
+      "id": "8b9c",
+      "assetType": "Electronics",
+      "assetName": "Gaming Console",
+      "assetModelId": "PlayBox2024",
+      "repairThreshold": 3,
+      "dealer": "GadgetWorld",
+      "quantity": 20,
+      "issueDate": "2024-11-25",
+      "warrantyDate": "2027-11-25",
+      "costPerUnit": 500
+    },
+    {
+      "id": "5",
+      "assetType": "Appliance",
+      "assetName": "Washing Machine",
+      "assetModelId": "WashPro3000",
+      "repairThreshold": 2,
+      "dealer": "HomeAppliances",
+      "quantity": 7,
+      "issueDate": "2024-02-18",
+      "warrantyDate": "2026-02-18",
+      "costPerUnit": 900
+    }
+  ],
+  "contacts": [
+    {
+      "id": "4bb7",
+      "name": "RAVI PRAKASH REDDY",
+      "email": "raviprakashreddy_kontham@srmap.edu.in",
+      "address": "ytgh",
+      "helpRequest": "fjhbhkhhmj"
+    }
+  ]
+}
