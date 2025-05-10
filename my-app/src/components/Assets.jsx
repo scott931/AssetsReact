@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./assets.css";
 
+import { FaHome, FaBox, FaUsers, FaTools, FaExchangeAlt, FaEnvelope, FaInfoCircle, FaBars, FaEye } from 'react-icons/fa';
+
 const Assets = () => {
-  const [view, setView] = useState("add"); // Default view is "add"
-  const [addedAssets, setAddedAssets] = useState([]); // Array to store added assets
+  const [view, setView] = useState("add");
+  const [addedAssets, setAddedAssets] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isAssetDropdownOpen, setIsAssetDropdownOpen] = useState(false);
   const [newAsset, setNewAsset] = useState({
     assetType: "",
     assetName: "",
@@ -16,7 +21,7 @@ const Assets = () => {
     costPerUnit: "",
   });
 
-  // Fetch added assets from `addedAssets` array in db.json
+  // Fetch added assets on load
   useEffect(() => {
     fetchAddedAssets();
   }, []);
@@ -26,7 +31,7 @@ const Assets = () => {
       const response = await fetch("http://localhost:5000/addedAssets");
       if (response.ok) {
         const data = await response.json();
-        setAddedAssets(data); // Update the addedAssets state with fetched data
+        setAddedAssets(data);
       } else {
         throw new Error("Failed to fetch added assets.");
       }
@@ -35,15 +40,14 @@ const Assets = () => {
     }
   };
 
-  // Handle input changes in the form
+  // Handle form input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewAsset({ ...newAsset, [name]: value });
   };
 
-  // Handle adding a new asset
+  // Handle form submission
   const handleAddAsset = async () => {
-    // Validate form fields
     const isFormValid = Object.values(newAsset).every((value) => value.trim() !== "");
     if (!isFormValid) {
       alert("Please fill out all fields.");
@@ -53,15 +57,13 @@ const Assets = () => {
     try {
       const response = await fetch("http://localhost:5000/addedAssets", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newAsset), // Send the new asset to db.json under `addedAssets`
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newAsset),
       });
 
       if (response.ok) {
         const addedAsset = await response.json();
-        setAddedAssets((prevAssets) => [...prevAssets, addedAsset]); // Update the UI immediately
+        setAddedAssets((prev) => [...prev, addedAsset]);
         setNewAsset({
           assetType: "",
           assetName: "",
@@ -72,7 +74,7 @@ const Assets = () => {
           issueDate: "",
           warrantyDate: "",
           costPerUnit: "",
-        }); // Reset the form
+        });
         alert("Asset added successfully!");
       } else {
         throw new Error("Failed to add asset.");
@@ -82,120 +84,33 @@ const Assets = () => {
     }
   };
 
-  return (
-    <div className="asset-management-container">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <button
-          className={view === "add" ? "active" : ""}
-          onClick={() => setView("add")}
-        >
-          Add Asset
-        </button>
-        <button
-          className={view === "display" ? "active" : ""}
-          onClick={() => setView("display")}
-        >
-          Display Assets
-        </button>
-      </div>
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleAssetDropdown = () => setIsAssetDropdownOpen(!isAssetDropdownOpen);
 
+  return (
+    <>
+    
       {/* Main Content */}
       <div className="main-content">
         {view === "add" && (
           <div className="add-asset-form">
             <h2>Add New Asset</h2>
             <form>
-              <label>
-                Asset Type:
-                <input
-                  type="text"
-                  name="assetType"
-                  value={newAsset.assetType}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Asset Name:
-                <input
-                  type="text"
-                  name="assetName"
-                  value={newAsset.assetName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Asset Model ID:
-                <input
-                  type="text"
-                  name="assetModelId"
-                  value={newAsset.assetModelId}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Repair Threshold:
-                <input
-                  type="number"
-                  name="repairThreshold"
-                  value={newAsset.repairThreshold}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Dealer:
-                <input
-                  type="text"
-                  name="dealer"
-                  value={newAsset.dealer}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Quantity:
-                <input
-                  type="number"
-                  name="quantity"
-                  value={newAsset.quantity}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Issue Date:
-                <input
-                  type="date"
-                  name="issueDate"
-                  value={newAsset.issueDate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Warranty Date:
-                <input
-                  type="date"
-                  name="warrantyDate"
-                  value={newAsset.warrantyDate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Cost per Unit:
-                <input
-                  type="number"
-                  name="costPerUnit"
-                  value={newAsset.costPerUnit}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
+              {Object.entries(newAsset).map(([key, value]) => (
+                <label key={key}>
+                  {key
+                    .replace(/([A-Z])/g, ' $1')
+                    .replace(/^./, str => str.toUpperCase())}
+                  :
+                  <input
+                    type={key.includes("Date") ? "date" : key === "repairThreshold" || key === "quantity" || key === "costPerUnit" ? "number" : "text"}
+                    name={key}
+                    value={value}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
+              ))}
               <button type="button" onClick={handleAddAsset}>
                 Add Asset
               </button>
@@ -239,7 +154,7 @@ const Assets = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

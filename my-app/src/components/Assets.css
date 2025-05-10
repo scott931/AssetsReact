@@ -1,23 +1,27 @@
 .asset-management-container {
     display: flex;
     height: 100vh;
-    background-color: #f0f4fc;
+    background-color: #ffffff;
     font-family: Arial, sans-serif;
+    text-decoration: white;
+    font-family: 'Poppins', sans-serif;
   }
-  
- 
+
+
   .sidebar {
-    width: 20%;
-    background-color: #d9e7f7;
+    /* width: 15%;  */
+    background-color: #191970; 
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px 0;
-    border-right: 1px solid #ccc;
-  }
+
   
+    /* border-right: 1px solid #ccc; */
+  }
+
   .sidebar button {
-    width: 90%;
+    /* width: 90%; */
     padding: 10px;
     margin: 10px 0;
     border: none;
@@ -28,51 +32,53 @@
     border-radius: 5px;
     text-align: center;
   }
-  
+
   .sidebar button.active {
     background-color: #007bff;
     color: #fff;
   }
-  
+
   .sidebar button:hover {
     background-color: #0056b3;
     color: #fff;
   }
-  
-  
-  .main-content {
+
+
+  /* .main-content {
     flex: 1;
     padding: 20px;
-  }
-  
+    margin-left: 13%;
+  } */
+
   .add-asset-form,
   .display-assets {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-left: 15%;
   }
-  
+
   .add-asset-form form {
     display: flex;
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .add-asset-form label {
     display: flex;
     flex-direction: column;
     font-size: 14px;
     color: #555;
   }
-  
+
   .add-asset-form input {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-  
+
   .add-asset-form button {
     padding: 10px;
     background-color: #007bff;
@@ -82,24 +88,57 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
+
   .add-asset-form button:hover {
     background-color: #0056b3;
   }
+
+
+  @media (max-width: 768px) {
+    .add-asset-form {
+      padding: 16px;
+      width: calc(100% - 220px);
+      margin-left: 200px;
+    }
   
+    .sidebar.closed ~ .add-asset-form {
+      width: calc(100% - 70px);
+      margin-left: 70px;
+    }
+    
+    .add-asset-form {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .add-asset-form {
+      grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+
   .display-assets table {
     width: 100%;
     border-collapse: collapse;
   }
-  
+
   .display-assets th,
   .display-assets td {
     padding: 10px;
     border: 1px solid #ccc;
     text-align: left;
   }
-  
+
   .display-assets th {
     background-color: #f8f9fc;
   }
-  
