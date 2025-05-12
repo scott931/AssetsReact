@@ -1,219 +1,200 @@
 import React, { useState, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import './EditAsset.css';
+import { updateAsset } from '../services/api';
 
 const EditAsset = ({ asset, onClose, onSave }) => {
-  const [editedAsset, setEditedAsset] = useState(asset);
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    description: '',
+    financedBy: '',
+    serialNumber: '',
+    tagNumber: '',
+    makeModel: '',
+    deliveryDate: '',
+    originalLocation: '',
+    currentLocation: '',
+    purchaseAmount: '',
+    depreciationRate: '',
+    responsibleOfficer: '',
+    condition: 'OPERATIONAL'
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setEditedAsset(asset);
+    if (asset) {
+      setFormData({
+        description: asset.description || '',
+        financedBy: asset.financedBy || '',
+        serialNumber: asset.serialNumber || '',
+        tagNumber: asset.tagNumber || '',
+        makeModel: asset.makeModel || '',
+        deliveryDate: asset.deliveryDate ? new Date(asset.deliveryDate).toISOString().split('T')[0] : '',
+        originalLocation: asset.originalLocation || '',
+        currentLocation: asset.currentLocation || '',
+        purchaseAmount: asset.purchaseAmount || '',
+        depreciationRate: asset.depreciationRate || '',
+        responsibleOfficer: asset.responsibleOfficer || '',
+        condition: asset.condition || 'OPERATIONAL'
+      });
+    }
   }, [asset]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedAsset(prev => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    // Clear error when field is edited
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: null
-      }));
-    }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!editedAsset.description) newErrors.description = 'Description is required';
-    if (!editedAsset.serialNumber) newErrors.serialNumber = 'Serial number is required';
-    if (!editedAsset.tagNumber) newErrors.tagNumber = 'Tag number is required';
-    if (!editedAsset.makeModel) newErrors.makeModel = 'Make & Model is required';
-    if (!editedAsset.deliveryDate) newErrors.deliveryDate = 'Delivery date is required';
-    if (!editedAsset.purchaseAmount || editedAsset.purchaseAmount <= 0) {
-      newErrors.purchaseAmount = 'Purchase amount must be greater than 0';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      onSave(editedAsset);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const updatedAsset = await updateAsset(asset.id, formData);
+      onSave(updatedAsset);
+      onClose();
+    } catch (err) {
+      setError('Failed to update asset. Please try again.');
+      console.error('Error updating asset:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="edit-asset-modal">
-      <div className="edit-asset-content">
-        <div className="edit-asset-header">
-          <h2>Edit Asset</h2>
-          <button className="close-button" onClick={onClose}>
-            <FaTimes />
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-medium">Edit Asset</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500"
+          >
+            ×
           </button>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
-              <label htmlFor="description">Asset Description</label>
-              <input
-                type="text"
-                id="description"
-                name="description"
-                value={editedAsset.description}
-                onChange={handleChange}
-                className={errors.description ? 'error' : ''}
-              />
-              {errors.description && <span className="error-message">{errors.description}</span>}
-            </div>
 
-            <div className="form-group">
-              <label htmlFor="financedBy">Financed By</label>
-              <input
-                type="text"
-                id="financedBy"
-                name="financedBy"
-                value={editedAsset.financedBy}
-                onChange={handleChange}
-              />
-            </div>
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            {error}
+          </div>
+        )}
 
-            <div className="form-group">
-              <label htmlFor="serialNumber">Serial Number</label>
-              <input
-                type="text"
-                id="serialNumber"
-                name="serialNumber"
-                value={editedAsset.serialNumber}
-                onChange={handleChange}
-                className={errors.serialNumber ? 'error' : ''}
-              />
-              {errors.serialNumber && <span className="error-message">{errors.serialNumber}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="tagNumber">Tag Number</label>
-              <input
-                type="text"
-                id="tagNumber"
-                name="tagNumber"
-                value={editedAsset.tagNumber}
-                onChange={handleChange}
-                className={errors.tagNumber ? 'error' : ''}
-              />
-              {errors.tagNumber && <span className="error-message">{errors.tagNumber}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="makeModel">Make & Model</label>
-              <input
-                type="text"
-                id="makeModel"
-                name="makeModel"
-                value={editedAsset.makeModel}
-                onChange={handleChange}
-                className={errors.makeModel ? 'error' : ''}
-              />
-              {errors.makeModel && <span className="error-message">{errors.makeModel}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="deliveryDate">Delivery Date</label>
-              <input
-                type="date"
-                id="deliveryDate"
-                name="deliveryDate"
-                value={editedAsset.deliveryDate}
-                onChange={handleChange}
-                className={errors.deliveryDate ? 'error' : ''}
-              />
-              {errors.deliveryDate && <span className="error-message">{errors.deliveryDate}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="originalLocation">Original Location</label>
-              <input
-                type="text"
-                id="originalLocation"
-                name="originalLocation"
-                value={editedAsset.originalLocation}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="currentLocation">Current Location</label>
-              <input
-                type="text"
-                id="currentLocation"
-                name="currentLocation"
-                value={editedAsset.currentLocation}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="purchaseAmount">Purchase Amount</label>
-              <input
-                type="number"
-                id="purchaseAmount"
-                name="purchaseAmount"
-                value={editedAsset.purchaseAmount}
-                onChange={handleChange}
-                step="0.01"
-                className={errors.purchaseAmount ? 'error' : ''}
-              />
-              {errors.purchaseAmount && <span className="error-message">{errors.purchaseAmount}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="depreciationRate">Depreciation Rate</label>
-              <input
-                type="number"
-                id="depreciationRate"
-                name="depreciationRate"
-                value={editedAsset.depreciationRate}
-                onChange={handleChange}
-                step="0.01"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="responsibleOfficer">Responsible Officer</label>
-              <input
-                type="text"
-                id="responsibleOfficer"
-                name="responsibleOfficer"
-                value={editedAsset.responsibleOfficer}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="condition">Condition</label>
-              <select
-                id="condition"
-                name="condition"
-                value={editedAsset.condition}
-                onChange={handleChange}
-              >
-                <option value="OPERATIONAL">Operational</option>
-                <option value="MAINTENANCE">Maintenance</option>
-                <option value="OBSOLETE">Obsolete</option>
-                <option value="DISPOSED">Disposed</option>
-              </select>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            />
           </div>
 
-          <div className="form-actions">
-            <button type="button" className="cancel-button" onClick={onClose}>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Serial Number</label>
+            <input
+              type="text"
+              name="serialNumber"
+              value={formData.serialNumber}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Tag Number</label>
+            <input
+              type="text"
+              name="tagNumber"
+              value={formData.tagNumber}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Make & Model</label>
+            <input
+              type="text"
+              name="makeModel"
+              value={formData.makeModel}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Delivery Date</label>
+            <input
+              type="date"
+              name="deliveryDate"
+              value={formData.deliveryDate}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Current Location</label>
+            <input
+              type="text"
+              name="currentLocation"
+              value={formData.currentLocation}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Purchase Amount</label>
+            <input
+              type="number"
+              name="purchaseAmount"
+              value={formData.purchaseAmount}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Condition</label>
+            <select
+              name="condition"
+              value={formData.condition}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="OPERATIONAL">Operational</option>
+              <option value="MAINTENANCE">Maintenance</option>
+              <option value="OBSOLETE">Obsolete</option>
+              <option value="DISPOSED">Disposed</option>
+            </select>
+          </div>
+
+          <div className="flex justify-end space-x-3 mt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+            >
               Cancel
             </button>
-            <button type="submit" className="save-button">
-              Save Changes
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50"
+            >
+              {loading ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>
