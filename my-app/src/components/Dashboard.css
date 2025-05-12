@@ -175,33 +175,43 @@
 }
 
 .action-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  display: flex;
+  gap: 8px;
 }
 
-.action-btn {
+.view-more-btn,
+.edit-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  background: #f8f9fa;
-  color: #2c3e50;
-  font-size: 0.9rem;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
+.view-more-btn {
+  border: 1px solid #007bff;
+  background: transparent;
+  color: #007bff;
+}
 
-.action-btn:hover {
+.view-more-btn:hover {
   background: #007bff;
   color: white;
-  transform: translateY(-2px);
-  border-color: #007bff;
+}
+
+.edit-btn {
+  border: 1px solid #28a745;
+  background: transparent;
+  color: #28a745;
+}
+
+.edit-btn:hover {
+  background: #28a745;
+  color: white;
 }
 
 @media (max-width: 768px) {

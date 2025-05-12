@@ -1,28 +1,58 @@
 // Mock API service for asset management
 const API_BASE_URL = 'http://localhost:3000/api';
 
-export const fetchDashboardStats = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/stats`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch dashboard stats');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching dashboard stats:', error);
-    throw error;
+// Stats API
+export const getStats = async () => {
+  const response = await fetch(`${API_BASE_URL}/stats`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch stats');
   }
+  return response.json();
 };
 
-export const fetchAssets = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/assets`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch assets');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching assets:', error);
-    throw error;
+// Assets API
+export const getAssets = async () => {
+  const response = await fetch(`${API_BASE_URL}/assets`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch assets');
   }
+  return response.json();
+};
+
+export const createAsset = async (assetData) => {
+  const response = await fetch(`${API_BASE_URL}/assets`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(assetData),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create asset');
+  }
+  return response.json();
+};
+
+export const updateAsset = async (id, assetData) => {
+  const response = await fetch(`${API_BASE_URL}/assets/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(assetData),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update asset');
+  }
+  return response.json();
+};
+
+export const deleteAsset = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/assets/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete asset');
+  }
+  return response.json();
 };

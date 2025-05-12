@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const db = require('./config/db');
 
 const app = express();
 const port = 3000;
@@ -7,90 +8,78 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Mock data
-const stats = [
-  { title: 'Total Assets', value: '1,234', icon: 'FaBox', color: '#4CAF50' },
-  { title: 'Active Dealers', value: '85', icon: 'FaUsers', color: '#2196F3' },
-  { title: 'Pending Maintenance', value: '12', icon: 'FaTools', color: '#FF9800' },
-  { title: 'Monthly Transactions', value: '456', icon: 'FaExchangeAlt', color: '#9C27B0' }
-];
-
-const assets = [
-  {
-    id: 1,
-    description: 'Dell Laptop XPS 15',
-    financedBy: 'Corporate Budget',
-    serialNumber: 'DL-XPS-78952',
-    tagNumber: 'IT-001-2023',
-    makeModel: 'Dell XPS 15 9510',
-    deliveryDate: '2023-05-15',
-    pvNumber: 'PV-2023-0054',
-    originalLocation: 'IT Department',
-    currentLocation: 'Finance Department',
-    replacementDate: '2026-05-15',
-    purchaseAmount: 1899.99,
-    depreciationRate: 0.25,
-    annualDepreciation: 474.99,
-    accumulatedDepreciation: 712.49,
-    netBookValue: 1187.50,
-    disposalDate: '',
-    disposalValue: 0,
-    responsibleOfficer: 'John Smith',
-    condition: 'OPERATIONAL'
-  },
-  {
-    id: 2,
-    description: 'Office Desk',
-    financedBy: 'Facility Budget',
-    serialNumber: 'IK-DESK-3462',
-    tagNumber: 'FUR-042-2022',
-    makeModel: 'IKEA Bekant',
-    deliveryDate: '2022-11-10',
-    pvNumber: 'PV-2022-0187',
-    originalLocation: 'Office Floor 3',
-    currentLocation: 'Office Floor 3',
-    replacementDate: '2027-11-10',
-    purchaseAmount: 349.99,
-    depreciationRate: 0.1,
-    annualDepreciation: 35.00,
-    accumulatedDepreciation: 78.75,
-    netBookValue: 271.24,
-    disposalDate: '',
-    disposalValue: 0,
-    responsibleOfficer: 'Sarah Johnson',
-    condition: 'OPERATIONAL'
-  },
-  {
-    id: 3,
-    description: 'Projector',
-    financedBy: 'IT Infrastructure Grant',
-    serialNumber: 'EP-PRJ-5673',
-    tagNumber: 'IT-057-2021',
-    makeModel: 'Epson PowerLite 992F',
-    deliveryDate: '2021-08-22',
-    pvNumber: 'PV-2021-0136',
-    originalLocation: 'Conference Room A',
-    currentLocation: 'Storage',
-    replacementDate: '2025-08-22',
-    purchaseAmount: 799.99,
-    depreciationRate: 0.2,
-    annualDepreciation: 160.00,
-    accumulatedDepreciation: 560.00,
-    netBookValue: 239.99,
-    disposalDate: '',
-    disposalValue: 0,
-    responsibleOfficer: 'Michael Wong',
-    condition: 'OBSOLETE'
-  }
-];
-
-// API Routes
-app.get('/api/stats', (req, res) => {
-  res.json(stats);
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'Asset Management API is running' });
 });
 
-app.get('/api/assets', (req, res) => {
-  res.json(assets);
+// API Routes
+app.get('/api/stats', async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM stats');
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/assets', async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM assets');
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching assets:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/assets', async (req, res) => {
+  try {
+    const { description, financedBy, serialNumber, tagNumber, makeModel, deliveryDate,
+            originalLocation, currentLocation, purchaseAmount, depreciationRate,
+            responsibleOfficer, condition } = req.body;
+
+    const [result] = await db.query(
+      'INSERT INTO assets (description, financedBy, serialNumber, tagNumber, makeModel, deliveryDate, originalLocation, currentLocation, purchaseAmount, depreciationRate, responsibleOfficer, `condition`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [description, financedBy, serialNumber, tagNumber, makeModel, deliveryDate, originalLocation, currentLocation, purchaseAmount, depreciationRate, responsibleOfficer, condition]
+    );
+
+    res.status(201).json({ id: result.insertId, ...req.body });
+  } catch (error) {
+    console.error('Error adding asset:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/assets/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description, financedBy, serialNumber, tagNumber, makeModel, deliveryDate,
+            originalLocation, currentLocation, purchaseAmount, depreciationRate,
+            responsibleOfficer, condition } = req.body;
+
+    await db.query(
+      'UPDATE assets SET description = ?, financedBy = ?, serialNumber = ?, tagNumber = ?, makeModel = ?, deliveryDate = ?, originalLocation = ?, currentLocation = ?, purchaseAmount = ?, depreciationRate = ?, responsibleOfficer = ?, `condition` = ? WHERE id = ?',
+      [description, financedBy, serialNumber, tagNumber, makeModel, deliveryDate, originalLocation, currentLocation, purchaseAmount, depreciationRate, responsibleOfficer, condition, id]
+    );
+
+    res.json({ id, ...req.body });
+  } catch (error) {
+    console.error('Error updating asset:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/assets/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.query('DELETE FROM assets WHERE id = ?', [id]);
+    res.json({ message: 'Asset deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting asset:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.listen(port, () => {
